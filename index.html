@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Vue Intro</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app">
+      <div id="header" class="flex justify-between border-b-[1px] p-3">
+        <img
+          src="https://ecs7.tokopedia.net/assets-tokopedia-lite/v2/zeus/production/e5b8438b.svg"
+          alt="TokoSidia"
+        />
+        <button
+          class="bg-red-600 text-white rounded-md px-5"
+          v-if="page==='product' || page==='form'"
+          v-on:click="handleChangePage('login')"
+        >
+          logout
+        </button>
+      </div>
+
+      <div id="login" class="flex justify-center mt-5" v-if="page === 'login'">
+        <button
+          class="bg-gray-600 text-white rounded-md px-5"
+          v-on:click="handleChangePage('product')"
+        >
+          dummy login
+        </button>
+      </div>
+
+      <div id="product" v-else-if="page==='product'">
+        <h1>List Product</h1>
+
+        <h1 v-text="title"></h1>
+        <!-- similar -->
+        <h1>{{title}}</h1>
+        <button
+          class="bg-gray-600 rounded-md px-5"
+          v-on:click="handleChangePage('form')"
+        >
+          Add News
+        </button>
+        <div v-html="rawhtml"></div>
+        <div class="flex gap-2 flex-wrap">
+          <!-- card -->
+          <div
+            class="border shadow-md rounded-md"
+            v-for="(product, index) in products"
+            v-bind:key="index"
+          >
+            <!-- index dapat dipakai jika diperlukan *ingat index mulai dari 0 -->
+            <img
+              class="rounded-t-md w-[150px]"
+              v-bind:src="product.urlToImage"
+            />
+            <div class="p-3">
+              <p>{{product.title}}</p>
+              <p>{{product.name}}</p>
+              <p>{{product.author}}</p>
+              <p>{{product.description}}</p>
+              <p>{{formatDate(product.publishedAt)}}</p>
+              <p>{{product.url}}</p>
+              <button
+                class="bg-red-400 p-2 rounded-md"
+                v-on:click="handleDeleteNews(index)"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="form" v-if="page==='form'">
+        <h1>Add News news</h1>
+        <form class="flex-row" @submit.prevent="handleAddNews">
+          <label for="title">Title: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="title"
+            v-model="newsState.title"
+          />
+          <label for="name">Name: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="name"
+            v-model="newsState.name"
+          />
+          <label for="author">Author: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="author"
+            v-model="newsState.author"
+          />
+          <label for="description">Description: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="description"
+            v-model="newsState.description"
+          />
+          <label for="publishedAt">PublishedAt: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="publishedAt"
+            v-model="newsState.publishedAt"
+          />
+          <label for="url">Url: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="url"
+            v-model="newsState.url"
+          />
+          <label for="urlToImage">UrlToImage: </label>
+          <input
+            type="text"
+            class="bg-grey-100"
+            id="urlToImage"
+            v-model="newsState.urlToImage"
+          />
+          <button type="submit" class="bg-blue-400">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            page: "login",
+            title: "tokosidia",
+            newsState: {
+              title: "",
+              name: "",
+              author: "",
+              description: "",
+              publishedAt: new Date(),
+              url: "",
+              urlToImage: "",
+            },
+            rawhtml:
+              "<img src='https://ecs7.tokopedia.net/assets-tokopedia-lite/v2/zeus/production/e5b8438b.svg'>",
+            products: [
+              {
+                name: "Google News",
+                author: "detikNews",
+                title:
+                  "KPK Minta Bukti soal Heboh USD 6 Juta Agar Makelar MA Tak Jadi Tersangka - detikNews",
+                description: null,
+                url: "https://news.google.com/rss/articles/CBMicGh0dHBzOi8vbmV3cy5kZXRpay5jb20vYmVyaXRhL2QtNzIwNTUwNS9rcGstbWludGEtYnVrdGktc29hbC1oZWJvaC11c2QtNi1qdXRhLWFnYXItbWFrZWxhci1tYS10YWstamFkaS10ZXJzYW5na2HSAXRodHRwczovL25ld3MuZGV0aWsuY29tL2Jlcml0YS9kLTcyMDU1MDUva3BrLW1pbnRhLWJ1a3RpLXNvYWwtaGVib2gtdXNkLTYtanV0YS1hZ2FyLW1ha2VsYXItbWEtdGFrLWphZGktdGVyc2FuZ2thL2FtcA?oc=5",
+                urlToImage: null,
+                publishedAt: "2024-02-22T00:05:33Z",
+                content: null,
+              },
+              {
+                name: "Google News",
+                author: "CNBC Indonesia",
+                title:
+                  "Real Count KPU 06.00 WIB: Golkar Kuasai 14 Provinsi, PDIP 10 Wilayah - CNBC Indonesia",
+                description: null,
+                url: "https://news.google.com/rss/articles/CBMiggFodHRwczovL3d3dy5jbmJjaW5kb25lc2lhLmNvbS9yZXNlYXJjaC8yMDI0MDIyMjA2NDEzOC0xMjgtNTE2NTgyL3JlYWwtY291bnQta3B1LTA2MDAtd2liLWdvbGthci1rdWFzYWktMTQtcHJvdmluc2ktcGRpcC0xMC13aWxheWFo0gEA?oc=5",
+                urlToImage: null,
+                publishedAt: "2024-02-21T23:45:27Z",
+                content: null,
+              },
+              {
+                name: "Google News",
+                author: "detikFinance",
+                title:
+                  "Gaji, Fasilitas, dan Tunjangan AHY Jadi Menteri ATR/BPN - detikFinance",
+                description: null,
+                url: "https://news.google.com/rss/articles/CBMiZ2h0dHBzOi8vZmluYW5jZS5kZXRpay5jb20vaW5mcmFzdHJ1a3R1ci9kLTcyMDU0OTQvZ2FqaS1mYXNpbGl0YXMtZGFuLXR1bmphbmdhbi1haHktamFkaS1tZW50ZXJpLWF0ci1icG7SAWtodHRwczovL2ZpbmFuY2UuZGV0aWsuY29tL2luZnJhc3RydWt0dXIvZC03MjA1NDk0L2dhamktZmFzaWxpdGFzLWRhbi10dW5qYW5nYW4tYWh5LWphZGktbWVudGVyaS1hdHItYnBuL2FtcA?oc=5",
+                urlToImage: null,
+                publishedAt: "2024-02-21T23:43:46Z",
+                content: null,
+              },
+            ],
+          };
+        },
+        methods: {
+          handleChangePage(page) {
+            this.page = page;
+          },
+          handleAddNews() {
+            // console.log(this.newsState);
+            this.products.push({ ...this.newsState }); //spread operator karena pastbyreference karena tidak menggunakan server
+            this.handleChangePage("product");
+          },
+          handleDeleteNews(index) {
+            this.products.splice(index, 1);
+          },
+          formatDate(timestamp) {
+            const days = [
+              "Minggu",
+              "Senin",
+              "Selasa",
+              "Rabu",
+              "Kamis",
+              "Jumat",
+              "Sabtu",
+            ];
+            const months = [
+              "Januari",
+              "Februari",
+              "Maret",
+              "April",
+              "Mei",
+              "Juni",
+              "Juli",
+              "Agustus",
+              "September",
+              "Oktober",
+              "November",
+              "Desember",
+            ];
+
+            const date = new Date(timestamp);
+            const dayName = days[date.getDay()];
+            const day = date.getDate();
+            const monthName = months[date.getMonth()];
+            const hours = ("0" + date.getHours()).slice(-2);
+            const minutes = ("0" + date.getMinutes()).slice(-2);
+
+            return `${dayName}, ${day} ${monthName} ${hours}.${minutes}`;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

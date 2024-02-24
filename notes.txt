@@ -1,0 +1,23 @@
+VUE DIRECTIVES
+
+- menampilkan data
+v-text
+v-html
+
+- conditional rendering
+v-if
+v-else  
+v-else-if
+v-show - terlihat di element html browser
+
+- handle event listener
+v-on
+v-bind
+v-model
+
+- render sebuah list
+v-for
+
+Vue Options API Basic
+- data
+- methods
