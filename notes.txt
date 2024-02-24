@@ -20,4 +20,12 @@ v-for
 
 Vue Options API Basic
 - data
-- methods
+- methods => register methods/function namun tidak lansung menjalankan methods yang sudah di register sehingga jika ingin menjalankan methods tanpa event dapat memanfaatkan lifecycles
+
+Vue Lifecycle : sejajar dengan data
+- beforeCreate() {} => state masih undefined dan DOM null
+- created() {} => state/data sudah ada namun DOM null *cocok udah fetch data
+- beforeMount() {} => tidak jauh berbeda dengan created namun created lebih dulu berjalan
+- mounted() {} => state dan DOM sudah ada *cocok untuk integrasi thirt party API
+- beforeUpdate() {} => berjalan ketika state berubah dan DOM akan diupdate
+- updated() {} => dijalankan ketika state berubah dan DOM sudah update
